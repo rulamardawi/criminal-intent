@@ -1,14 +1,18 @@
 package com.jameskbride.criminalIntent;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class Crime {
 
     private UUID id;
     private String title;
+    private Date discoveredOn;
+    private boolean solved;
 
     public Crime() {
         id = UUID.randomUUID();
+        discoveredOn = new Date();
     }
 
     public UUID getId() {
@@ -21,5 +25,21 @@ public class Crime {
 
     public String getTitle() {
         return this.title;
+    }
+
+    public Date getDiscoveredOn() {
+        return discoveredOn;
+    }
+
+    public void setDiscoveredOn(Date discoveredOn) {
+        this.discoveredOn = discoveredOn;
+    }
+
+    public boolean isSolved() {
+        return solved;
+    }
+
+    public void setSolved(boolean solved) {
+        this.solved = solved;
     }
 }
