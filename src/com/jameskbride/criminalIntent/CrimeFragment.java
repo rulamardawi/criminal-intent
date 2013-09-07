@@ -15,8 +15,11 @@ import android.widget.EditText;
 
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
+
+    public static final String EXTRA_CRIME_ID = "com.jameskbride.criminalIntent.crime_id";
 
     private Crime crime;
     private EditText titleField;
@@ -26,7 +29,8 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crime = new Crime();
+        UUID crimeId = (UUID)getArguments().getSerializable(EXTRA_CRIME_ID);
+        crime = CrimeLab.getInstance(getActivity()).getCrime(crimeId);
     }
 
     @Override
@@ -40,8 +44,19 @@ public class CrimeFragment extends Fragment {
         return  view;
     }
 
+    public static CrimeFragment newInstance(UUID crimeId) {
+        Bundle args = new Bundle();
+        args.putSerializable(EXTRA_CRIME_ID, crimeId);
+
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     private void wireSolvedCheckBox(View view) {
         solvedCheckBox = (CheckBox)view.findViewById(R.id.crime_solved);
+        solvedCheckBox.setChecked(crime.isSolved());
         solvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -59,6 +74,7 @@ public class CrimeFragment extends Fragment {
 
     private void wireTitleField(View view) {
         titleField = (EditText)view.findViewById(R.id.crime_title);
+        titleField.setText(crime.getTitle());
         titleField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
