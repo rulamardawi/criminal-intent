@@ -72,8 +72,12 @@ public class CrimeListFragment extends ListFragment {
 
         private void populateDate(View convertView, Crime crime) {
             TextView dateTextView = (TextView)convertView.findViewById(R.id.crime_list_item_dateTextView);
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy h:mm a");
+            SimpleDateFormat dateFormatter = getSimpleDateFormat();
             dateTextView.setText(dateFormatter.format(crime.getDiscoveredOn()));
+        }
+
+        private SimpleDateFormat getSimpleDateFormat() {
+            return new SimpleDateFormat("MM/dd/yyyy");
         }
 
         private void populateTitle(View convertView, Crime crime) {
