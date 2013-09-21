@@ -1,14 +1,18 @@
 package com.jameskbride.criminalIntent;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -37,19 +41,51 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         UUID crimeId = (UUID)getArguments().getSerializable(EXTRA_CRIME_ID);
         crime = CrimeLab.getInstance(getActivity()).getCrime(crimeId);
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                if (hasParentActivity()) {
+                    NavUtils.navigateUpFromSameTask(getActivity());
+                }
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(menuItem);
+        }
+    }
+
+    @TargetApi(11)
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_crime, parent, false);
+
+        enableHomeButton();
 
         wireTitleField(view);
         wireDateButton(view);
         wireSolvedCheckBox(view);
 
         return  view;
+    }
+
+    private void enableHomeButton() {
+        if (isHoneycombOrHigher() && hasParentActivity()) {
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private boolean hasParentActivity() {
+        return NavUtils.getParentActivityName(getActivity()) != null;
+    }
+
+    private boolean isHoneycombOrHigher() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
 
     @Override
