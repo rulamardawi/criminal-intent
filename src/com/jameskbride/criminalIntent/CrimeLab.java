@@ -15,17 +15,10 @@ public class CrimeLab {
     private CrimeLab(Context appContext) {
         this.context = appContext;
         this.crimes = new ArrayList<Crime>();
-
-        populateCrimes();
     }
 
-    private void populateCrimes() {
-        for (int i=0; i<100; i++) {
-            Crime crime = new Crime();
-            crime.setTitle("Crime # " + i);
-            crime.setSolved(i % 2 ==0);
-            crimes.add(crime);
-        }
+    public void addCrime(Crime crime) {
+        this.crimes.add(crime);
     }
 
     public static CrimeLab getInstance(Context appContext) {
