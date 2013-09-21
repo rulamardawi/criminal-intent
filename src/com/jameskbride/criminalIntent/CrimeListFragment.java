@@ -1,6 +1,8 @@
 package com.jameskbride.criminalIntent;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -17,16 +19,36 @@ public class CrimeListFragment extends ListFragment {
 
     private List<Crime> crimes;
     private static final String TAG = "CrimeListFragment";
+    private boolean subtitleVisible;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        subtitleVisible = true;
         setHasOptionsMenu(true);
         getActivity().setTitle(R.string.crimes_title);
         crimes = CrimeLab.getInstance(getActivity()).getCrimes();
 
         CrimeAdapter crimeArrayAdapter = new CrimeAdapter(crimes);
         setListAdapter(crimeArrayAdapter);
+    }
+
+    @TargetApi(11)
+    @Override
+    public View onCreateView(LayoutInflater layoutInflater, ViewGroup parent, Bundle savedInstanceState) {
+        View view = super.onCreateView(layoutInflater, parent, savedInstanceState);
+
+        if (isHoneycombOrHigher()) {
+            if (subtitleVisible) {
+                getActivity().getActionBar().setSubtitle(R.string.subtitle);
+            }
+        }
+        return view;
+    }
+
+    private boolean isHoneycombOrHigher() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
 
     @Override
@@ -48,8 +70,13 @@ public class CrimeListFragment extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
         menuInflater.inflate(R.menu.fragment_crime_list, menu);
+        MenuItem subtitleMenuItem = menu.findItem(R.id.meneu_item_show_subtitle);
+        if (subtitleVisible && subtitleMenuItem != null) {
+            subtitleMenuItem.setTitle(R.string.subtitle);
+        }
     }
 
+    @TargetApi(11)
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
@@ -62,6 +89,17 @@ public class CrimeListFragment extends ListFragment {
                 startActivityForResult(intent, 0);
 
                 return true;
+            case R.id.meneu_item_show_subtitle:
+                if (getActivity().getActionBar().getSubtitle() == null) {
+                    getActivity().getActionBar().setSubtitle(R.string.subtitle);
+                    subtitleVisible = true;
+                    menuItem.setTitle(R.string.hide_subtitle);
+
+                } else {
+                    getActivity().getActionBar().setSubtitle(null);
+                    subtitleVisible = false;
+                    menuItem.setTitle(R.string.show_subtitle);
+                }
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
