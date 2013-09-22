@@ -18,13 +18,19 @@ public class CrimePagerActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewPager = new ViewPager(this);
-        viewPager.setId(R.id.viewPager);
+        viewPager = createViewPager();
         setContentView(viewPager);
 
         crimes = CrimeLab.getInstance(this).getCrimes();
         wireViewPager();
         setCurrentCrime();
+    }
+
+    private ViewPager createViewPager() {
+        ViewPager pager = new ViewPager(this);
+        pager.setId(R.id.viewPager);
+
+        return pager;
     }
 
     private void setCurrentCrime() {

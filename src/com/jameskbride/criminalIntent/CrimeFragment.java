@@ -75,17 +75,13 @@ public class CrimeFragment extends Fragment {
     }
 
     private void enableHomeButton() {
-        if (isHoneycombOrHigher() && hasParentActivity()) {
+        if (AndroidVersionHelper.isHoneycombOrHigher() && hasParentActivity()) {
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
     private boolean hasParentActivity() {
         return NavUtils.getParentActivityName(getActivity()) != null;
-    }
-
-    private boolean isHoneycombOrHigher() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
 
     @Override

@@ -2,10 +2,8 @@ package com.jameskbride.criminalIntent;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -24,8 +22,8 @@ public class CrimeListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
         subtitleVisible = true;
+        setRetainInstance(true);
         setHasOptionsMenu(true);
         getActivity().setTitle(R.string.crimes_title);
         crimes = CrimeLab.getInstance(getActivity()).getCrimes();
@@ -39,16 +37,10 @@ public class CrimeListFragment extends ListFragment {
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = super.onCreateView(layoutInflater, parent, savedInstanceState);
 
-        if (isHoneycombOrHigher()) {
-            if (subtitleVisible) {
-                getActivity().getActionBar().setSubtitle(R.string.subtitle);
-            }
+        if (AndroidVersionHelper.isHoneycombOrHigher() && subtitleVisible) {
+            getActivity().getActionBar().setSubtitle(R.string.subtitle);
         }
         return view;
-    }
-
-    private boolean isHoneycombOrHigher() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
 
     @Override
@@ -60,6 +52,10 @@ public class CrimeListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
+        startCrimePagerActivity(position);
+    }
+
+    private void startCrimePagerActivity(int position) {
         Crime crime = ((CrimeAdapter)getListAdapter()).getItem(position);
         Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
         intent.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getId());
@@ -70,6 +66,10 @@ public class CrimeListFragment extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
         menuInflater.inflate(R.menu.fragment_crime_list, menu);
+        setMenuItemSubtitle(menu);
+    }
+
+    private void setMenuItemSubtitle(Menu menu) {
         MenuItem subtitleMenuItem = menu.findItem(R.id.meneu_item_show_subtitle);
         if (subtitleVisible && subtitleMenuItem != null) {
             subtitleMenuItem.setTitle(R.string.subtitle);
@@ -91,13 +91,13 @@ public class CrimeListFragment extends ListFragment {
                 return true;
             case R.id.meneu_item_show_subtitle:
                 if (getActivity().getActionBar().getSubtitle() == null) {
-                    getActivity().getActionBar().setSubtitle(R.string.subtitle);
                     subtitleVisible = true;
+                    getActivity().getActionBar().setSubtitle(R.string.subtitle);
                     menuItem.setTitle(R.string.hide_subtitle);
 
                 } else {
-                    getActivity().getActionBar().setSubtitle(null);
                     subtitleVisible = false;
+                    getActivity().getActionBar().setSubtitle(null);
                     menuItem.setTitle(R.string.show_subtitle);
                 }
             default:
