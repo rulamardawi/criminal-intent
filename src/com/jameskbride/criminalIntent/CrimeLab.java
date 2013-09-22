@@ -1,7 +1,10 @@
 package com.jameskbride.criminalIntent;
 
 import android.content.Context;
+import android.util.Log;
+import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +14,9 @@ public class CrimeLab {
     private static CrimeLab instance;
     private Context context;
     private List<Crime> crimes;
+
+    private static final String TAG = "CrimeLab";
+    private static final String FILENAME = "crimes.json";
 
     private CrimeLab(Context appContext) {
         this.context = appContext;
@@ -42,5 +48,17 @@ public class CrimeLab {
         }
 
         return null;
+    }
+
+    public boolean saveCrimes() {
+        CriminalIntentSerializer crimeSerializer = new CriminalIntentSerializer(this.context, FILENAME);
+        try {
+            Log.d(TAG, "Saving crimes...");
+            crimeSerializer.saveCrimes(this.crimes);
+            return true;
+        } catch (Exception e) {
+            Log.d(TAG, "There was an error saving the crimes", e);
+            return false;
+        }
     }
 }

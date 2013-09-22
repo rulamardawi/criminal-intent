@@ -1,5 +1,8 @@
 package com.jameskbride.criminalIntent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,6 +12,11 @@ public class Crime {
     private String title;
     private Date discoveredOn;
     private boolean solved;
+
+    private static final String JSON_ID = "id";
+    private static final String JSON_TITLE = "title";
+    private static final String JSON_DISCOVERED_ON = "discovered_on";
+    private static final String JSON_SOLVED = "solved";
 
     public Crime() {
         id = UUID.randomUUID();
@@ -46,5 +54,15 @@ public class Crime {
     @Override
     public String toString() {
         return title;
+    }
+
+    public JSONObject toJSON() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(JSON_ID, this.id.toString());
+        jsonObject.put(JSON_TITLE, this.title);
+        jsonObject.put(JSON_SOLVED, this.solved);
+        jsonObject.put(JSON_DISCOVERED_ON, this.discoveredOn.getTime());
+
+        return jsonObject;
     }
 }
