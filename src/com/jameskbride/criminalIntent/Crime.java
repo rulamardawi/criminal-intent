@@ -23,6 +23,13 @@ public class Crime {
         discoveredOn = new Date();
     }
 
+    public Crime(JSONObject json) throws JSONException {
+        this.id = UUID.fromString(json.getString(JSON_ID));
+        this.title = json.getString(JSON_TITLE);
+        this.solved = json.getBoolean(JSON_SOLVED);
+        this.discoveredOn = new Date(json.getLong(JSON_DISCOVERED_ON));
+    }
+
     public UUID getId() {
         return this.id;
     }

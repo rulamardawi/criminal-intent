@@ -20,7 +20,17 @@ public class CrimeLab {
 
     private CrimeLab(Context appContext) {
         this.context = appContext;
-        this.crimes = new ArrayList<Crime>();
+        loadCrimes();
+    }
+
+    private void loadCrimes() {
+        CriminalIntentSerializer crimeSerializer = new CriminalIntentSerializer(this.context, FILENAME);
+        try {
+            this.crimes = crimeSerializer.loadCrimes();
+        } catch (Exception e) {
+            crimes = new ArrayList<Crime>();
+            Log.d(TAG, "There was an error loading the crimes.", e);
+        }
     }
 
     public void addCrime(Crime crime) {

@@ -3,11 +3,10 @@ package com.jameskbride.criminalIntent;
 import android.content.Context;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONTokener;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CriminalIntentSerializer {
@@ -47,4 +46,40 @@ public class CriminalIntentSerializer {
         return jsonArray;
     }
 
+    public List<Crime> loadCrimes() throws IOException, JSONException {
+        List<Crime> crimes = new ArrayList<Crime>();
+        BufferedReader reader = null;
+
+        try {
+            InputStream inputStream = context.openFileInput(fileName);
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            JSONArray jsonArray = readCrimesFromFile(reader);
+
+            populateCrimes(crimes, jsonArray);
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+
+        return crimes;
+    }
+
+    private void populateCrimes(List<Crime> crimes, JSONArray jsonArray) throws JSONException {
+        for (int i=0; i<jsonArray.length(); i++) {
+            Crime crime = new Crime(jsonArray.getJSONObject(i));
+            crimes.add(crime);
+        }
+    }
+
+    private JSONArray readCrimesFromFile(BufferedReader reader) throws IOException, JSONException {
+        StringBuilder builder = new StringBuilder();
+        String line = null;
+
+        while((line = reader.readLine()) != null) {
+            builder.append(line);
+        }
+
+        return (JSONArray) new JSONTokener(builder.toString()).nextValue();
+    }
 }
