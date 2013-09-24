@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -81,8 +82,8 @@ public class CrimeFragment extends Fragment {
     }
 
     private void enableHomeButton() {
-        if (AndroidVersionHelper.isHoneycombOrHigher() && hasParentActivity()) {
-            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (hasParentActivity()) {
+            ((ActionBarActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 

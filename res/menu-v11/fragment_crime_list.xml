@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:ci="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menu_item_new_crime"
           android:icon="@drawable/ic_menu_add"
           android:title="@string/new_crime"
-          android:showAsAction="ifRoom|withText"/>
-    <item android:id="@+id/meneu_item_show_subtitle"
+          ci:showAsAction="ifRoom|withText"/>
+    <item android:id="@+id/menu_item_show_subtitle"
           android:title="@string/show_subtitle"
-          android:showAsAction="ifRoom"/>
+          ci:showAsAction="ifRoom"/>
 </menu>
