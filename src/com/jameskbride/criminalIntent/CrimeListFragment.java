@@ -34,20 +34,24 @@ public class CrimeListFragment extends ListFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = super.onCreateView(layoutInflater, parent, savedInstanceState);
 
         if (subtitleVisible) {
             ((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(R.string.subtitle);
         }
+
+        ListView listView = (ListView)view.findViewById(android.R.id.list);
+        registerForContextMenu(listView);
+
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
     }
 
     @Override
@@ -102,6 +106,11 @@ public class CrimeListFragment extends ListFragment {
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+        getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, contextMenu);
     }
 
     private class CrimeAdapter extends ArrayAdapter<Crime> {
