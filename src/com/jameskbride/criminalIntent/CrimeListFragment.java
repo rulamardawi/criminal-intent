@@ -6,10 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.*;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -111,6 +108,22 @@ public class CrimeListFragment extends ListFragment {
     @Override
     public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, contextMenu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem menuItem) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuItem.getMenuInfo();
+        int position = info.position;
+        CrimeAdapter crimeAdapter = (CrimeAdapter)getListAdapter();
+        Crime crime = crimeAdapter.getItem(position);
+
+        switch (menuItem.getItemId()) {
+            case R.id.menu_item_delete_crime:
+                CrimeLab.getInstance(getActivity()).deleteCrime(crime);
+                crimeAdapter.notifyDataSetChanged();
+                return true;
+        }
+        return super.onContextItemSelected(menuItem);
     }
 
     private class CrimeAdapter extends ArrayAdapter<Crime> {

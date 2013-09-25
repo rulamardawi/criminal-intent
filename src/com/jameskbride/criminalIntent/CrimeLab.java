@@ -37,6 +37,10 @@ public class CrimeLab {
         this.crimes.add(crime);
     }
 
+    public void deleteCrime(Crime crime) {
+        this.crimes.remove(crime);
+    }
+
     public static CrimeLab getInstance(Context appContext) {
         if (instance == null) {
             instance = new CrimeLab(appContext.getApplicationContext());
