@@ -46,9 +46,64 @@ public class CrimeListFragment extends ListFragment {
         }
 
         ListView listView = (ListView)view.findViewById(android.R.id.list);
-        registerForContextMenu(listView);
-
+        wireListView(listView);
         return view;
+    }
+
+    private void wireListView(ListView listView) {
+        if (AndroidVersionHelper.isHoneycombOrHigher()) {
+            configureListViewForMultiChoiceMode(listView);
+        } else {
+            registerForContextMenu(listView);
+        }
+
+    }
+
+    private void configureListViewForMultiChoiceMode(ListView listView) {
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                MenuInflater menuInflater = actionMode.getMenuInflater();
+                menuInflater.inflate(R.menu.crime_list_item_context, menu);
+
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                return false;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                switch(menuItem.getItemId()) {
+                    case R.id.menu_item_delete_crime:
+                        CrimeAdapter crimeAdapter = (CrimeAdapter)getListAdapter();
+                        CrimeLab crimeLab = CrimeLab.getInstance(getActivity());
+                        for (int i= crimeAdapter.getCount()-1; i>=0; i--) {
+                            if (getListView().isItemChecked(i)) {
+                                crimeLab.deleteCrime(crimeAdapter.getItem(i));
+                            }
+                        }
+                        actionMode.finish();
+                        crimeAdapter.notifyDataSetChanged();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode actionMode) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
     }
 
     @Override
