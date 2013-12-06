@@ -3,25 +3,20 @@ package com.jameskbride.criminalIntent;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
-import android.support.v4.app.Fragment;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
+import android.widget.*;
 
-import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -38,6 +33,7 @@ public class CrimeFragment extends Fragment {
     private EditText titleField;
     private Button dateButton;
     private CheckBox solvedCheckBox;
+    private ImageButton photoButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,8 +73,29 @@ public class CrimeFragment extends Fragment {
         wireTitleField(view);
         wireDateButton(view);
         wireSolvedCheckBox(view);
+        wirePhotoButton(view);
 
         return  view;
+    }
+
+    private void wirePhotoButton(View view) {
+        photoButton = (ImageButton)view.findViewById(R.id.crime_imageButton);
+        photoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CrimeCameraActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        if (cameraFeatureIsUnavailable()) {
+            photoButton.setEnabled(false);
+        }
+    }
+
+    private boolean cameraFeatureIsUnavailable() {
+        PackageManager packageManager = getActivity().getPackageManager();
+        return !packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
 
     private void enableHomeButton() {

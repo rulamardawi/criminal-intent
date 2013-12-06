@@ -2,11 +2,11 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:ci="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/menu_item_new_crime"
+    <item android:id="@id/menu_item_new_crime"
           android:icon="@drawable/ic_menu_add"
           android:title="@string/new_crime"
           ci:showAsAction="ifRoom|withText"/>
-    <item android:id="@+id/menu_item_show_subtitle"
+    <item android:id="@id/menu_item_show_subtitle"
           android:title="@string/show_subtitle"
           ci:showAsAction="ifRoom"/>
 </menu>
